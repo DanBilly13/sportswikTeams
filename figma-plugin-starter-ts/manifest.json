@@ -1,0 +1,19 @@
+{
+  "name": "Sporstwik Avatars",
+  "id": "1564981337272340455",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://raw.githubusercontent.com",
+      "https://cdn.jsdelivr.net",
+      "https://unpkg.com",
+      "https://rsms.me",
+      "https://rsms.me/inter/font-files/"
+    ]
+  },
+  "documentAccess": "dynamic-page"
+}
