@@ -455,26 +455,20 @@
         <h1 class="t-header">Sportswik Teams</h1>
       </div>
     </div>
-
     <!-- Row Dan -->
 
-    <!-- Row Dan -->
-    <div class="rowDan">
-      <!-- Hidden base (badgeBase only, unchanged) -->
-      <input
-        id="badgeBase"
-        type="hidden"
-        value="https://cdn.jsdelivr.net/gh/DanBilly13/sportswikTeams@main"
-      />
-    </div>
-    <!-- Row Dan -->
+    <!-- Hidden base (badgeBase only, unchanged) -->
+    <input
+      id="badgeBase"
+      type="hidden"
+      value="https://cdn.jsdelivr.net/gh/DanBilly13/sportswikTeams@main"
+    />
 
     <div class="rowDan">
       <div
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Competition</div>
         <div class="field">
           <label class="label t-label" for="competition">Competition</label>
           <select id="competition" class="select-menu">
@@ -497,7 +491,6 @@
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Region</div>
         <div class="field">
           <label class="label t-label" for="region">Region</label>
           <select id="region" class="select-menu">
@@ -520,7 +513,6 @@
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Federation</div>
         <div class="field">
           <label class="label t-label" for="federation">Federation</label>
           <select id="federation" class="select-menu">
@@ -552,7 +544,6 @@
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Venue</div>
         <div class="field">
           <label class="label t-label" for="venue">Venue</label>
           <select id="venue" class="select-menu">
@@ -578,22 +569,11 @@
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Club badges</div>
         <div class="field">
-          <label class="label t-label" for="badgeLibrary">Badge library</label>
+          <label class="label t-label" for="badgeLibrary">Badge Badges</label>
           <select id="badgeLibrary" class="select-menu">
             <option value="gotSports" selected>GotSports (home/away)</option>
           </select>
-          <div class="type type--small helper">
-            Choose which badge set to use when populating home & away.
-          </div>
-          <div class="type type--small helper">
-            Add shapes named <span class="t-primary">home-badge</span> and
-            <span class="t-primary">away-badge</span> to place the badge images,
-            and optional text layers named
-            <span class="t-primary">home-club-name</span> and
-            <span class="t-primary">away-club-name</span> to label them.
-          </div>
         </div>
       </div>
     </div>
@@ -631,10 +611,6 @@
               class="input__field input--short"
             />
           </div>
-        </div>
-        <div class="type type--small helper">
-          If “Random” is checked, the plugin will pick a number from 0–6 for
-          each card. Uncheck to use the values above for all selected cards.
         </div>
       </div>
     </div>
@@ -703,11 +679,6 @@
             <span>Random within 09:00–19:00</span>
           </label>
         </div>
-        <div class="type type--small helper">
-          Sequential dates assign <em>today</em> to the first selected card,
-          then go backward one day per card (so most recent is first). Times
-          step through 09:00–19:00.
-        </div>
       </div>
     </div>
 
@@ -734,40 +705,67 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="field">
-            <label class="label t-label" for="amt1">Amount 1</label>
-            <select id="amt1" class="select-menu">
-              <option value="50">Random ≤ 50</option>
-              <option value="500" selected>Random ≤ 500</option>
-              <option value="5000">Random ≤ 5000</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label t-label" for="amt2">Amount 2</label>
-            <select id="amt2" class="select-menu">
-              <option value="50">Random ≤ 50</option>
-              <option value="500" selected>Random ≤ 500</option>
-              <option value="5000">Random ≤ 5000</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label t-label" for="amt3">Amount 3</label>
-            <select id="amt3" class="select-menu">
-              <option value="50">Random ≤ 50</option>
-              <option value="500" selected>Random ≤ 500</option>
-              <option value="5000">Random ≤ 5000</option>
-            </select>
-          </div>
+        <div class="field">
+          <label class="label t-label" for="amt1">Amount 1</label>
+          <select id="amt1" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
         </div>
 
-        <div class="type type--small helper">
-          The plugin generates three numbers (one per selected range) and
-          outputs them to text layers named
-          <span class="t-primary">amount-1</span>,
-          <span class="t-primary">amount-2</span>,
-          <span class="t-primary">amount-3</span>
-          as “123&nbsp;SEK”.
+        <div class="field">
+          <label class="label t-label" for="amt2">Amount 2</label>
+          <select id="amt2" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label t-label" for="amt3">Amount 3</label>
+          <select id="amt3" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Quantity helper</div>
+
+        <div class="field">
+          <label class="label t-label" for="qty1">Quantity 1</label>
+          <select id="qty1" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label t-label" for="qty2">Quantity 2</label>
+          <select id="qty2" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label t-label" for="qty3">Quantity 3</label>
+          <select id="qty3" class="select-menu">
+            <option value="50">Random ≤ 50</option>
+            <option value="500" selected>Random ≤ 500</option>
+            <option value="5000">Random ≤ 5000</option>
+          </select>
         </div>
       </div>
     </div>
@@ -821,6 +819,12 @@
             <span class="t-primary">amount-2</span>,
             <span class="t-primary">amount-3</span> — amounts with currency
             (e.g. “456 SEK”)
+          </li>
+          <li>
+            <span class="t-primary">qty-1</span>,
+            <span class="t-primary">qty-2</span>,
+            <span class="t-primary">qty-3</span> — plain quantities (numbers
+            only)
           </li>
           <li>
             <span class="t-primary">date</span> — optional date (YYYY-MM-DD)
@@ -1010,6 +1014,9 @@
         const amount1Limit = readLimit("amt1");
         const amount2Limit = readLimit("amt2");
         const amount3Limit = readLimit("amt3");
+        const qty1Limit = readLimit("qty1");
+        const qty2Limit = readLimit("qty2");
+        const qty3Limit = readLimit("qty3");
 
         const badgeBaseEl = document.getElementById("badgeBase");
         const badgeBase =
@@ -1036,6 +1043,9 @@
               amount1Limit,
               amount2Limit,
               amount3Limit,
+              qty1Limit,
+              qty2Limit,
+              qty3Limit,
             },
           },
           "*"

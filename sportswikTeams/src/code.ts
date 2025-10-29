@@ -825,6 +825,15 @@ figma.ui.onmessage = async (msg: any) => {
       const amount3Limit: number = Number.isFinite(Number(msg.amount3Limit))
         ? Number(msg.amount3Limit)
         : 500;
+      const qty1Limit: number = Number.isFinite(Number(msg.qty1Limit))
+        ? Number(msg.qty1Limit)
+        : 500;
+      const qty2Limit: number = Number.isFinite(Number(msg.qty2Limit))
+        ? Number(msg.qty2Limit)
+        : 500;
+      const qty3Limit: number = Number.isFinite(Number(msg.qty3Limit))
+        ? Number(msg.qty3Limit)
+        : 500;
 
       if (!names.length) {
         figma.notify("No built-in names available");
@@ -936,6 +945,10 @@ figma.ui.onmessage = async (msg: any) => {
         const tAmt1 = findFirstTextByName(root, "amount-1");
         const tAmt2 = findFirstTextByName(root, "amount-2");
         const tAmt3 = findFirstTextByName(root, "amount-3");
+        // --- Quantity helper targets ---
+        const tQty1 = findFirstTextByName(root, "qty-1");
+        const tQty2 = findFirstTextByName(root, "qty-2");
+        const tQty3 = findFirstTextByName(root, "qty-3");
         // --- Team name target ---
         const tTeamName = findFirstTextByName(root, "team-name");
         const tHomeTeamName = findFirstTextByName(root, "home-team-name");
@@ -964,7 +977,10 @@ figma.ui.onmessage = async (msg: any) => {
           tAwayScore ||
           tTeamName ||
           tHomeTeamName ||
-          tAwayTeamName
+          tAwayTeamName ||
+          tQty1 ||
+          tQty2 ||
+          tQty3
         );
         if (!hasAnyTarget) continue;
 
@@ -1012,6 +1028,25 @@ figma.ui.onmessage = async (msg: any) => {
           if (tAmt3) {
             await ensureEditable(tAmt3);
             tAmt3.characters = `${v3} ${currency}`;
+          }
+        }
+
+        // --- QUANTITY HELPER ---
+        if (tQty1 || tQty2 || tQty3) {
+          const q1 = randUpTo(qty1Limit);
+          const q2 = randUpTo(qty2Limit);
+          const q3 = randUpTo(qty3Limit);
+          if (tQty1) {
+            await ensureEditable(tQty1);
+            tQty1.characters = String(q1);
+          }
+          if (tQty2) {
+            await ensureEditable(tQty2);
+            tQty2.characters = String(q2);
+          }
+          if (tQty3) {
+            await ensureEditable(tQty3);
+            tQty3.characters = String(q3);
           }
         }
 
