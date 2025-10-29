@@ -460,53 +460,12 @@
 
     <!-- Row Dan -->
     <div class="rowDan">
-      <!-- Hidden base (unchanged) -->
-      <input
-        id="imgBase"
-        type="hidden"
-        value="https://cdn.jsdelivr.net/gh/DanBilly13/playerAvatars@main"
-      />
+      <!-- Hidden base (badgeBase only, unchanged) -->
       <input
         id="badgeBase"
         type="hidden"
         value="https://cdn.jsdelivr.net/gh/DanBilly13/sportswikTeams@main"
       />
-
-      <div class="section">
-        <div class="input">
-          <label class="label t-label" for="namesSet">Names</label>
-          <select id="namesSet" class="select-menu">
-            <option value="en-boys" selected>English — Boys</option>
-            <option value="en-girls">English — Girls</option>
-            <option value="sv-boys">Swedish — Boys</option>
-            <option value="sv-girls">Swedish — Girls</option>
-            <option value="ch-boys">Swiss — Boys</option>
-            <option value="ch-girls">Swiss — Girls</option>
-            <option value="en-unisex">English — Unisex</option>
-            <option value="sv-unisex">Swedish — Unisex</option>
-            <option value="ch-unisex">Swiss — Unisex</option>
-          </select>
-          <div class="type type--small helper">
-            Choose locale + gender for the built-in name list.
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="input">
-          <label class="label t-label" for="teamFolder">Avatar set</label>
-          <!-- Figma Plugin DS native select -->
-          <select id="teamFolder" class="select-menu">
-            <option value="blueTeamBoys" selected>Blue Team — Boys</option>
-            <option value="blueTeamGirls">Blue Team — Girls</option>
-            <option value="redTeamBoys">Red Team — Boys</option>
-            <option value="redTeamGirls">Red Team — Girls</option>
-            <option value="guardians">Guardians</option>
-            <option value="teamStaff">Team staff</option>
-            <option value="users">Users</option>
-          </select>
-        </div>
-      </div>
     </div>
     <!-- Row Dan -->
 
@@ -516,36 +475,19 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Competition</div>
-        <div id="competition-group" class="field">
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="competition"
-              value="Elite League"
-              checked
-            />
-            <span>Elite League</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="competition" value="Nordic Cup" />
-            <span>Nordic Cup</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="competition" value="Baltic Challenge" />
-            <span>Baltic Challenge</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="competition" value="National Qualifier" />
-            <span>National Qualifier</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="competition" value="Youth Invitational" />
-            <span>Youth Invitational</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="competition" value="__random" />
-            <span>Random competition</span>
-          </label>
+        <div class="field">
+          <label class="label t-label" for="competition">Competition</label>
+          <select id="competition" class="select-menu">
+            <option value="Elite League" selected>Elite League</option>
+            <option value="Nordic Cup">Nordic Cup</option>
+            <option value="Baltic Challenge">Baltic Challenge</option>
+            <option value="National Qualifier">National Qualifier</option>
+            <option value="Youth Invitational">Youth Invitational</option>
+            <option value="__random">Random competition</option>
+          </select>
+          <div class="type type--small helper">
+            Choose or randomize the competition name.
+          </div>
         </div>
       </div>
     </div>
@@ -556,31 +498,19 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Region</div>
-        <div id="region-group" class="field">
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="Northland" checked />
-            <span>Region A — Northland</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="Riverview" />
-            <span>Region B — Riverview</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="Silver Coast" />
-            <span>Region C — Silver Coast</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="Pinecrest" />
-            <span>Region D — Pinecrest</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="Lakewood" />
-            <span>Region E — Lakewood</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="region" value="__random" />
-            <span>Random Region</span>
-          </label>
+        <div class="field">
+          <label class="label t-label" for="region">Region</label>
+          <select id="region" class="select-menu">
+            <option value="Northland" selected>Region A — Northland</option>
+            <option value="Riverview">Region B — Riverview</option>
+            <option value="Silver Coast">Region C — Silver Coast</option>
+            <option value="Pinecrest">Region D — Pinecrest</option>
+            <option value="Lakewood">Region E — Lakewood</option>
+            <option value="__random">Random Region</option>
+          </select>
+          <div class="type type--small helper">
+            Choose or randomize the region.
+          </div>
         </div>
       </div>
     </div>
@@ -591,52 +521,29 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Federation</div>
-        <div id="federation-group" class="field">
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="federation"
-              value="Northern Football Union"
-              checked
-            />
-            <span>Federation A — Northern Football Union</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="federation"
-              value="Coastal Football Council"
-            />
-            <span>Federation B — Coastal Football Council</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="federation"
-              value="Central League Federation"
-            />
-            <span>Federation C — Central League Federation</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="federation"
-              value="Highlands Association"
-            />
-            <span>Federation D — Highlands Association</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="federation"
-              value="Eastshore Federation"
-            />
-            <span>Federation E — Eastshore Federation</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="federation" value="__random" />
-            <span>Random Federation</span>
-          </label>
+        <div class="field">
+          <label class="label t-label" for="federation">Federation</label>
+          <select id="federation" class="select-menu">
+            <option value="Northern Football Union" selected>
+              Federation A — Northern Football Union
+            </option>
+            <option value="Coastal Football Council">
+              Federation B — Coastal Football Council
+            </option>
+            <option value="Central League Federation">
+              Federation C — Central League Federation
+            </option>
+            <option value="Highlands Association">
+              Federation D — Highlands Association
+            </option>
+            <option value="Eastshore Federation">
+              Federation E — Eastshore Federation
+            </option>
+            <option value="__random">Random Federation</option>
+          </select>
+          <div class="type type--small helper">
+            Choose or randomize the federation.
+          </div>
         </div>
       </div>
     </div>
@@ -646,36 +553,23 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Venue</div>
-        <div id="venue-group" class="field">
-          <label class="radio-custom t-body">
-            <input
-              type="radio"
-              name="venue"
-              value="Vildmannavallen IP"
-              checked
-            />
-            <span>Venue A — Vildmannavallen IP</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="venue" value="Skellefteå Arena" />
-            <span>Venue B — Skellefteå Arena</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="venue" value="Umeå Stadium" />
-            <span>Venue C — Umeå Stadium</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="venue" value="Kiruna Park" />
-            <span>Venue D — Kiruna Park</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="venue" value="Växjö Sports Center" />
-            <span>Venue E — Växjö Sports Center</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="venue" value="__random" />
-            <span>Random Venue</span>
-          </label>
+        <div class="field">
+          <label class="label t-label" for="venue">Venue</label>
+          <select id="venue" class="select-menu">
+            <option value="Vildmannavallen IP" selected>
+              Venue A — Vildmannavallen IP
+            </option>
+            <option value="Skellefteå Arena">Venue B — Skellefteå Arena</option>
+            <option value="Umeå Stadium">Venue C — Umeå Stadium</option>
+            <option value="Kiruna Park">Venue D — Kiruna Park</option>
+            <option value="Växjö Sports Center">
+              Venue E — Växjö Sports Center
+            </option>
+            <option value="__random">Random Venue</option>
+          </select>
+          <div class="type type--small helper">
+            Choose or randomize the venue.
+          </div>
         </div>
       </div>
     </div>
@@ -751,115 +645,25 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Team name</div>
-        <div id="teamname-group" class="field">
-          <!-- Boys group -->
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="boys-u12" checked />
-            <span>BOYS U12</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="boys-u16" />
-            <span>BOYS U16</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="div3-boys" />
-            <span>Division 3 Boys</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="div2-boys" />
-            <span>Division 2 Boys</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="__random-boys" />
-            <span>Random Boys</span>
-          </label>
-
-          <!-- Girls group -->
-          <label class="radio-custom t-body" style="margin-top: 8px">
-            <input type="radio" name="teamNameOpt" value="girls-u12" />
-            <span>GIRLS U12</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="girls-u16" />
-            <span>GIRLS U16</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="div3-girls" />
-            <span>Division 3 Girls</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="div2-girls" />
-            <span>Division 2 Girls</span>
-          </label>
-          <label class="radio-custom t-body">
-            <input type="radio" name="teamNameOpt" value="__random-girls" />
-            <span>Random Girls</span>
-          </label>
-
-          <!-- Mixed group -->
-          <label class="radio-custom t-body" style="margin-top: 8px">
-            <input type="radio" name="teamNameOpt" value="__random-mixed" />
-            <span>Random Mixed</span>
-          </label>
+        <div class="field">
+          <label class="label t-label" for="teamNameOpt">Team name</label>
+          <select id="teamNameOpt" class="select-menu">
+            <option value="boys-u12" selected>BOYS U12</option>
+            <option value="boys-u16">BOYS U16</option>
+            <option value="div3-boys">Division 3 Boys</option>
+            <option value="div2-boys">Division 2 Boys</option>
+            <option value="__random-boys">Random Boys</option>
+            <option value="girls-u12">GIRLS U12</option>
+            <option value="girls-u16">GIRLS U16</option>
+            <option value="div3-girls">Division 3 Girls</option>
+            <option value="div2-girls">Division 2 Girls</option>
+            <option value="__random-girls">Random Girls</option>
+            <option value="__random-mixed">Random Mixed</option>
+          </select>
+          <div class="type type--small helper">
+            Choose or randomize the team name.
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="rowDan">
-      <div class="field">
-        <label class="label t-label" for="start">Starting number</label>
-        <input
-          id="start"
-          type="number"
-          min="1"
-          value="1"
-          class="input__field input--short"
-        />
-      </div>
-    </div>
-
-    <div class="rowDan">
-      <label class="checkbox-custom t-body">
-        <input id="shuffle" type="checkbox" />
-        <span>Shuffle names</span>
-      </label>
-    </div>
-
-    <div class="rowDan">
-      <label class="checkbox-custom t-body">
-        <input id="useAvatar" type="checkbox" />
-        <span>Include avatars</span>
-      </label>
-      <div class="row" id="avatarStyleRow">
-        <label class="radio-custom t-body">
-          <input type="radio" name="avatarStyle" value="vector" />
-          <span>Vector initials</span>
-        </label>
-        <label class="radio-custom t-body">
-          <input type="radio" name="avatarStyle" value="image" checked />
-          <span>Image PNGs</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="rowDan">
-      <div
-        class="section"
-        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
-      >
-        <div class="t-subheader">Personal info</div>
-        <label class="checkbox-custom t-body">
-          <input id="useMobile" type="checkbox" />
-          <span>Include mobile number</span>
-        </label>
-        <label class="checkbox-custom t-body">
-          <input id="useEmail" type="checkbox" />
-          <span>Include email</span>
-        </label>
-        <label class="checkbox-custom t-body">
-          <input id="usePersonId" type="checkbox" />
-          <span>Include personal ID</span>
-        </label>
       </div>
     </div>
 
@@ -869,39 +673,102 @@
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
         <div class="t-subheader">Date & time</div>
-        <label class="checkbox-custom t-body">
-          <input id="useDate" type="checkbox" />
-          <span>Include date</span>
-        </label>
-        <label class="checkbox-custom t-body">
-          <input id="useTime" type="checkbox" />
-          <span>Include time</span>
-        </label>
+        <div class="field">
+          <label class="label t-label">Date</label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="dateMode" value="off" checked />
+            <span>Off</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="dateMode" value="sequential" />
+            <span>Sequential (today, yesterday, …)</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="dateMode" value="random" />
+            <span>Random order (recent days)</span>
+          </label>
+        </div>
+        <div class="field" style="margin-top: 8px">
+          <label class="label t-label">Time</label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="timeMode" value="off" checked />
+            <span>Off</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="timeMode" value="sequential" />
+            <span>Sequential within 09:00–19:00</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="timeMode" value="random" />
+            <span>Random within 09:00–19:00</span>
+          </label>
+        </div>
+        <div class="type type--small helper">
+          Sequential dates assign <em>today</em> to the first selected card,
+          then go backward one day per card (so most recent is first). Times
+          step through 09:00–19:00.
+        </div>
       </div>
     </div>
 
+    <!-- Row Dan -->
     <div class="rowDan">
       <div
         class="section"
         style="display: flex; flex-direction: column; gap: 8px; width: 100%"
       >
-        <div class="t-subheader">Role</div>
-        <label class="radio-custom t-body">
-          <input type="radio" name="roleMode" value="player" checked />
-          <span>Player</span>
-        </label>
-        <label class="radio-custom t-body">
-          <input type="radio" name="roleMode" value="guardian" />
-          <span>Guardian</span>
-        </label>
-        <label class="radio-custom t-body">
-          <input type="radio" name="roleMode" value="staff" />
-          <span>Team staff</span>
-        </label>
-        <label class="radio-custom t-body">
-          <input type="radio" name="roleMode" value="mixed" />
-          <span>Mixed</span>
-        </label>
+        <div class="t-subheader">Money helper</div>
+
+        <div class="field">
+          <label class="label t-label" for="currency">Currency</label>
+          <select id="currency" class="select-menu">
+            <option value="SEK" selected>SEK — Swedish krona</option>
+            <option value="CHF">CHF — Swiss franc</option>
+            <option value="USD">USD — United States dollar</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="GBP">GBP — Pound sterling</option>
+            <option value="CAD">CAD — Canadian dollar</option>
+          </select>
+          <div class="type type--small helper">
+            Used as an abbreviation suffix (e.g. “456 SEK”).
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="label t-label" for="amt1">Amount 1</label>
+            <select id="amt1" class="select-menu">
+              <option value="50">Random ≤ 50</option>
+              <option value="500" selected>Random ≤ 500</option>
+              <option value="5000">Random ≤ 5000</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label t-label" for="amt2">Amount 2</label>
+            <select id="amt2" class="select-menu">
+              <option value="50">Random ≤ 50</option>
+              <option value="500" selected>Random ≤ 500</option>
+              <option value="5000">Random ≤ 5000</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label t-label" for="amt3">Amount 3</label>
+            <select id="amt3" class="select-menu">
+              <option value="50">Random ≤ 50</option>
+              <option value="500" selected>Random ≤ 500</option>
+              <option value="5000">Random ≤ 5000</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="type type--small helper">
+          The plugin generates three numbers (one per selected range) and
+          outputs them to text layers named
+          <span class="t-primary">amount-1</span>,
+          <span class="t-primary">amount-2</span>,
+          <span class="t-primary">amount-3</span>
+          as “123&nbsp;SEK”.
+        </div>
       </div>
     </div>
 
@@ -949,26 +816,17 @@
             <span class="t-primary">home-score</span> and
             <span class="t-primary">away-score</span> — numeric score text
           </li>
-          <li><span class="t-primary">mobile-number</span> — optional phone</li>
-          <li><span class="t-primary">email</span> — optional email address</li>
           <li>
-            <span class="t-primary">personal-id</span> — optional personal ID
-            (YYYYMMDD-XXXX)
+            <span class="t-primary">amount-1</span>,
+            <span class="t-primary">amount-2</span>,
+            <span class="t-primary">amount-3</span> — amounts with currency
+            (e.g. “456 SEK”)
           </li>
           <li>
             <span class="t-primary">date</span> — optional date (YYYY-MM-DD)
           </li>
           <li><span class="t-primary">time</span> — optional time (HH:MM)</li>
-          <li>
-            <span class="t-primary">role</span> — Player, Guardian, or Staff
-            role
-          </li>
         </ul>
-        You can also include a shape named
-        <span class="t-primary">avatar</span>,
-        <span class="t-primary">player-avatar</span>, or
-        <span class="t-primary">photo</span> — the plugin updates its first fill
-        automatically with an image or color avatar. <br /><br />
         The plugin supports randomization for competition, region, federation,
         and venue. Simply select “Random …” for any of those sections before
         populating.
@@ -1055,58 +913,22 @@
       };
 
       document.getElementById("scan").onclick = () => {
-        const namesSel = document.getElementById("namesSet");
-        const val = namesSel ? namesSel.value : "en-boys";
-        const [lc, gender] = val.split("-");
-        parent.postMessage(
-          { pluginMessage: { type: "scan", nameSet: gender, locale: lc } },
-          "*"
-        );
+        parent.postMessage({ pluginMessage: { type: "scan" } }, "*");
       };
 
       document.getElementById("populate").onclick = async () => {
-        const namesSel = document.getElementById("namesSet");
-        const val = namesSel ? namesSel.value : "en-boys";
-        const [lc, gender] = val.split("-");
-        const start = parseInt(
-          document.getElementById("start").value || "1",
-          10
+        // Date/Time modes
+        const dateModeEl = document.querySelector(
+          'input[name="dateMode"]:checked'
         );
-        const shuffle = document.getElementById("shuffle").checked;
-        const useAvatar = document.getElementById("useAvatar").checked;
-        const useMobile = document.getElementById("useMobile").checked;
-        const useEmail = document.getElementById("useEmail").checked;
-        const usePersonId = document.getElementById("usePersonId").checked;
-        const useDate = document.getElementById("useDate").checked;
-        const useTime = document.getElementById("useTime").checked;
-
-        const styleRadios = Array.from(
-          document.querySelectorAll('input[name="avatarStyle"]')
+        const timeModeEl = document.querySelector(
+          'input[name="timeMode"]:checked'
         );
-        const avatarMode =
-          (styleRadios.find((r) => r.checked) || {}).value || "image";
-
-        const roleRadios = Array.from(
-          document.querySelectorAll('input[name="roleMode"]')
-        );
-        const roleMode = (
-          roleRadios.find((r) => r.checked) || { value: "player" }
-        ).value;
-
-        const imgBaseEl = document.getElementById("imgBase");
-        const imgBase =
-          imgBaseEl && "value" in imgBaseEl ? imgBaseEl.value : "";
-        const teamFolderEl = document.getElementById("teamFolder");
-        const teamFolder = teamFolderEl ? teamFolderEl.value : "";
-        const badgeBaseEl = document.getElementById("badgeBase");
-        const badgeBase =
-          badgeBaseEl && "value" in badgeBaseEl ? badgeBaseEl.value : "";
+        const dateMode = dateModeEl ? dateModeEl.value : "off"; // off | sequential | random
+        const timeMode = timeModeEl ? timeModeEl.value : "off"; // off | sequential | random
 
         // --- Read Competition / Region / Federation / Venue ---
-        function pickChecked(name) {
-          const el = document.querySelector(`input[name="${name}"]:checked`);
-          return el ? el.value : "";
-        }
+        // pickChecked removed
         function randomFrom(list) {
           return list[Math.floor(Math.random() * list.length)];
         }
@@ -1140,13 +962,21 @@
           "Växjö Sports Center",
         ];
 
-        let competition = pickChecked("competition");
+        // --- Competition/Region/Federation/Venue: use select dropdowns (plain JS) ---
+        const competitionSel = document.getElementById("competition");
+        let competition = competitionSel ? competitionSel.value : "";
         if (competition === "__random") competition = randomFrom(COMP_OPTS);
-        let region = pickChecked("region");
+
+        const regionSel = document.getElementById("region");
+        let region = regionSel ? regionSel.value : "";
         if (region === "__random") region = randomFrom(REG_OPTS);
-        let federation = pickChecked("federation");
+
+        const federationSel = document.getElementById("federation");
+        let federation = federationSel ? federationSel.value : "";
         if (federation === "__random") federation = randomFrom(FED_OPTS);
-        let venue = pickChecked("venue");
+
+        const venueSel = document.getElementById("venue");
+        let venue = venueSel ? venueSel.value : "";
         if (venue === "__random") venue = randomFrom(VENUE_OPTS);
 
         // Team name option
@@ -1155,7 +985,7 @@
         );
         const teamNameOpt = teamNameEl ? teamNameEl.value : "";
 
-        // Badge library (for future), already have teamFolder for avatars
+        // Badge library (for future)
         const badgeLibrarySel = document.getElementById("badgeLibrary");
         const badgeLibrary = badgeLibrarySel ? badgeLibrarySel.value : "";
 
@@ -1170,25 +1000,28 @@
           10
         );
 
+        // Money helper (currency + three limits)
+        const currencySel = document.getElementById("currency");
+        const currency = currencySel ? currencySel.value : "SEK";
+        function readLimit(id) {
+          const el = document.getElementById(id);
+          return el && el.value ? parseInt(el.value, 10) : 500;
+        }
+        const amount1Limit = readLimit("amt1");
+        const amount2Limit = readLimit("amt2");
+        const amount3Limit = readLimit("amt3");
+
+        const badgeBaseEl = document.getElementById("badgeBase");
+        const badgeBase =
+          badgeBaseEl && "value" in badgeBaseEl ? badgeBaseEl.value : "";
+
         showSpinner();
         parent.postMessage(
           {
             pluginMessage: {
               type: "populate",
-              nameSet: gender,
-              locale: lc,
-              startNumber: start,
-              shuffle,
-              useAvatar,
-              useMobile,
-              useEmail,
-              usePersonId,
-              useDate,
-              useTime,
-              roleMode,
-              avatarMode,
-              imgBase,
-              teamFolder,
+              dateMode,
+              timeMode,
               competition,
               region,
               federation,
@@ -1199,6 +1032,10 @@
               scoreRandom,
               homeScore,
               awayScore,
+              currency,
+              amount1Limit,
+              amount2Limit,
+              amount3Limit,
             },
           },
           "*"

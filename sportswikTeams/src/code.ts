@@ -673,6 +673,11 @@ function formatTimeHM(d: Date): string {
   return `${hh}:${mi}`;
 }
 
+function randUpTo(n: number): number {
+  const lim = Math.max(1, Math.floor(Number(n) || 1));
+  return Math.floor(Math.random() * lim) + 1; // 1..lim
+}
+
 const STAFF_ROLES: string[] = [
   "Coach",
   "Assistant Coach",
@@ -736,8 +741,8 @@ figma.ui.onmessage = async (msg: any) => {
 
   if (msg.type === "scan") {
     try {
-      const nameSet = msg.nameSet || "boys";
-      const locale = normalizeLocale(msg.locale || "en");
+      const nameSet = "boys";
+      const locale = normalizeLocale("en");
 
       // Preview from built-ins
       const namePreview = builtInNames(locale, nameSet).slice(0, 5);
@@ -763,7 +768,7 @@ figma.ui.onmessage = async (msg: any) => {
           preview: namePreview,
         },
         numbers: { source: "built-in", preview: numberPreview },
-        avatar: { requested: !!msg.useAvatar },
+        avatar: { requested: false },
         selection,
       });
     } catch (e: any) {
@@ -774,31 +779,23 @@ figma.ui.onmessage = async (msg: any) => {
 
   if (msg.type === "populate") {
     try {
-      const nameSet: "boys" | "girls" | "unisex" =
-        msg.nameSet === "girls" || msg.nameSet === "unisex"
-          ? msg.nameSet
-          : "boys";
-      const startNum =
-        typeof msg.startNumber === "number" && msg.startNumber > 0
-          ? msg.startNumber | 0
-          : 1;
-      const shuffleNames = !!msg.shuffle;
-      const locale = normalizeLocale(msg.locale || "en");
-      const useAvatar = !!msg.useAvatar;
-      const useMobile: boolean = !!msg.useMobile;
-      const useEmail: boolean = !!msg.useEmail;
-      const usePersonId: boolean = !!msg.usePersonId;
-      const useDate: boolean = !!msg.useDate;
-      const useTime: boolean = !!msg.useTime;
-      const roleMode: string =
-        typeof msg.roleMode === "string" ? msg.roleMode : "player";
-      const personIds = builtInPersonalIds(20);
-      const emailDomain: string =
-        typeof msg.emailDomain === "string" && msg.emailDomain.trim()
-          ? msg.emailDomain.trim()
-          : "mail.com";
-      const mobiles = builtInMobileNumbers();
+      // Set local defaults for removed UI fields
+      const nameSet: "boys" | "girls" | "unisex" = "boys";
+      const startNum = 1;
+      const shuffleNames = false;
+      const useAvatar = false;
+      const useMobile = false;
+      const useEmail = false;
+      const usePersonId = false;
+      const roleMode: string | null = null; // disable role writing when UI has no control
+      const avatarMode = "vector";
+      const imgBase = "";
+      const teamFolder = "";
 
+      const dateMode: string =
+        typeof msg.dateMode === "string" ? msg.dateMode : "off"; // off | sequential | random
+      const timeMode: string =
+        typeof msg.timeMode === "string" ? msg.timeMode : "off"; // off | sequential | random
       const competition: string =
         typeof msg.competition === "string" ? msg.competition : "";
       const region: string = typeof msg.region === "string" ? msg.region : "";
@@ -812,16 +809,22 @@ figma.ui.onmessage = async (msg: any) => {
       const teamNameOpt: string =
         typeof msg.teamNameOpt === "string" ? msg.teamNameOpt : "";
 
-      // Avatar options
-      const avatarMode = msg.avatarMode || "vector"; // "vector" | "image"
-      const imgBase: string =
-        typeof msg.imgBase === "string" ? msg.imgBase : "";
-      const teamFolder: string =
-        typeof msg.teamFolder === "string" ? msg.teamFolder : "";
-
       // Built-in only data
-      let names = builtInNames(locale, nameSet);
+      let names = builtInNames("en", nameSet);
       let numbers = builtInShirtNumbers(25);
+
+      // --- Money helper: currency and limits
+      const currency: string =
+        typeof msg.currency === "string" ? msg.currency : "SEK";
+      const amount1Limit: number = Number.isFinite(Number(msg.amount1Limit))
+        ? Number(msg.amount1Limit)
+        : 500;
+      const amount2Limit: number = Number.isFinite(Number(msg.amount2Limit))
+        ? Number(msg.amount2Limit)
+        : 500;
+      const amount3Limit: number = Number.isFinite(Number(msg.amount3Limit))
+        ? Number(msg.amount3Limit)
+        : 500;
 
       if (!names.length) {
         figma.notify("No built-in names available");
@@ -845,24 +848,32 @@ figma.ui.onmessage = async (msg: any) => {
       const dateStr = formatDateYMD(now);
       const timeStr = formatTimeHM(now);
 
+      // --- Date sequence (for sequential/random) ---
+      function dateForIndex(idx: number): string {
+        // Most-recent-first: today for idx 0, then yesterday, etc.
+        const d = new Date();
+        d.setDate(d.getDate() - idx);
+        return formatDateYMD(d);
+      }
+      function buildDateList(n: number): string[] {
+        const arr = Array.from({ length: n }, (_, i) => dateForIndex(i));
+        return arr;
+      }
+      function shuffleInPlace<T>(a: T[]): T[] {
+        return shuffle(a);
+      }
+
+      // --- Time sequence 09:00–19:00 (hourly slots) ---
+      const TIME_SLOTS: string[] = Array.from({ length: 11 }, (_, k) => {
+        const h = 9 + k; // 9..19 inclusive
+        return `${String(h).padStart(2, "0")}:00`;
+      });
+
       const sel = figma.currentPage.selection || [];
       if (!sel.length) {
         figma.notify("Select frames/instances to populate");
         postToUI("error", "Select frames/instances to populate");
         return;
-      }
-
-      let remoteAvatars: Uint8Array[] = [];
-      if (useAvatar && avatarMode === "image" && imgBase && teamFolder) {
-        const cacheKey = `${imgBase}|${teamFolder}`;
-        remoteAvatars = REMOTE_CACHE[cacheKey];
-        if (!remoteAvatars) {
-          remoteAvatars = await loadRemoteAvatarBytes(imgBase, teamFolder, 60);
-          REMOTE_CACHE[cacheKey] = remoteAvatars;
-          if (!remoteAvatars || remoteAvatars.length === 0) {
-            figma.notify("No remote images found — using vector avatars.");
-          }
-        }
       }
 
       // --- Preload badge images if needed ---
@@ -886,6 +897,12 @@ figma.ui.onmessage = async (msg: any) => {
             60
           ));
       }
+
+      // --- Date & Time lists for this run ---
+      const N = sel.length;
+      const datesSeq: string[] = buildDateList(N);
+      const datesRand: string[] = buildDateList(N);
+      if (dateMode === "random") shuffleInPlace(datesRand);
 
       let count = 0;
       for (let i = 0; i < sel.length; i++) {
@@ -915,6 +932,10 @@ figma.ui.onmessage = async (msg: any) => {
         // --- Score targets ---
         const tHomeScore = findFirstTextByName(root, "home-score");
         const tAwayScore = findFirstTextByName(root, "away-score");
+        // --- Money helper amount targets ---
+        const tAmt1 = findFirstTextByName(root, "amount-1");
+        const tAmt2 = findFirstTextByName(root, "amount-2");
+        const tAmt3 = findFirstTextByName(root, "amount-3");
         // --- Team name target ---
         const tTeamName = findFirstTextByName(root, "team-name");
         const tHomeTeamName = findFirstTextByName(root, "home-team-name");
@@ -973,6 +994,25 @@ figma.ui.onmessage = async (msg: any) => {
         if (tVenue && venue) {
           await ensureEditable(tVenue);
           tVenue.characters = venue;
+        }
+
+        // --- MONEY HELPER ---
+        if (tAmt1 || tAmt2 || tAmt3) {
+          const v1 = randUpTo(amount1Limit);
+          const v2 = randUpTo(amount2Limit);
+          const v3 = randUpTo(amount3Limit);
+          if (tAmt1) {
+            await ensureEditable(tAmt1);
+            tAmt1.characters = `${v1} ${currency}`;
+          }
+          if (tAmt2) {
+            await ensureEditable(tAmt2);
+            tAmt2.characters = `${v2} ${currency}`;
+          }
+          if (tAmt3) {
+            await ensureEditable(tAmt3);
+            tAmt3.characters = `${v3} ${currency}`;
+          }
         }
 
         // --- TEAM NAME ---
@@ -1067,31 +1107,25 @@ figma.ui.onmessage = async (msg: any) => {
           tAwayScore.characters = String(aScore);
         }
 
-        if (useMobile && tMobile) {
-          await ensureEditable(tMobile);
-          tMobile.characters = String(mobiles[i % mobiles.length]);
-        }
-        // tEmail, tPersonId, tDate, tTime, tRole are already declared above
-        if (useEmail && tEmail) {
-          await ensureEditable(tEmail);
-          tEmail.characters = emailFromName(String(nameVal), emailDomain);
-        }
-        if (usePersonId && tPersonId) {
-          await ensureEditable(tPersonId);
-          tPersonId.characters = String(personIds[i % personIds.length]);
-        }
-        if (useDate && tDate) {
+        // --- DATE ---
+        if (tDate && dateMode !== "off") {
+          let dOut = dateStr;
+          if (dateMode === "sequential") dOut = datesSeq[i];
+          else if (dateMode === "random") dOut = datesRand[i];
           await ensureEditable(tDate);
-          tDate.characters = dateStr;
+          tDate.characters = dOut;
         }
-        if (useTime && tTime) {
+        // --- TIME ---
+        if (tTime && timeMode !== "off") {
+          let tOut = timeStr;
+          if (timeMode === "sequential")
+            tOut = TIME_SLOTS[i % TIME_SLOTS.length];
+          else if (timeMode === "random")
+            tOut = TIME_SLOTS[Math.floor(Math.random() * TIME_SLOTS.length)];
           await ensureEditable(tTime);
-          tTime.characters = timeStr;
+          tTime.characters = tOut;
         }
-        if (tRole) {
-          await ensureEditable(tRole);
-          tRole.characters = roleForIndex(roleMode, i);
-        }
+        // No role writing (tRole) since roleMode is null
 
         // Set club name text layers if present
         if (tHomeClub) {
@@ -1115,40 +1149,6 @@ figma.ui.onmessage = async (msg: any) => {
             const img = figma.createImage(awayBadges[i % awayBadges.length]);
             setImageFillOnTarget(awayTarget, img);
           } catch {}
-        }
-
-        // Optionally add/update an avatar (image or vector) if requested
-        if (useAvatar) {
-          const gender = nameSet === "girls" ? "girls" : "boys"; // treat unisex as boys for palette
-          const target = findAvatarTargetGeneric(root);
-
-          if (
-            avatarMode === "image" &&
-            target &&
-            remoteAvatars &&
-            remoteAvatars.length > 0
-          ) {
-            const b = remoteAvatars[i % remoteAvatars.length];
-            try {
-              const img = figma.createImage(b);
-              setImageFillOnTarget(target as any, img);
-            } catch (e) {
-              // fallback to vector if image fails
-              const style = pickStyle(i, locale as any, gender as any);
-              await applyVectorAvatarToNode({
-                host: root,
-                name: String(nameVal),
-                style,
-              });
-            }
-          } else {
-            const style = pickStyle(i, locale as any, gender as any);
-            await applyVectorAvatarToNode({
-              host: root,
-              name: String(nameVal),
-              style,
-            });
-          }
         }
 
         count++;
