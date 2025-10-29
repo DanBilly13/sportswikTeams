@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Figma Plugin DS from CDN -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/figma-plugin-ds@1.0.1/dist/figma-plugin-ds.css"
+    />
+    <script src="https://unpkg.com/figma-plugin-ds@1.0.1/dist/figma-plugin-ds.js"></script>
+    <style>
+      body.container {
+        padding: 12px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .rowDan {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--c-medium-grey);
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+      }
+      #log {
+        background: #f6f8fb;
+        border: 1px solid #dfe3ea;
+        border-radius: 6px;
+        padding: 8px;
+        height: 120px;
+        overflow: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .section + .section {
+        margin-top: 16px;
+      }
+      /* Field spacing */
+      .field + .field {
+        margin-top: 8px;
+      }
+
+      /* Helper/caption text */
+      .helper {
+        margin-top: 6px;
+        opacity: 0.7;
+      }
+
+      /* Align form elements to left edge and unify typography */
+      .checkbox__label {
+        font-size: 13px;
+        font-family: Inter, sans-serif;
+        line-height: 20px;
+        display: flex;
+        height: auto;
+        margin-left: 6px;
+      }
+
+      /* Align form elements to left edge and unify typography */
+      .label.label,
+      .radio__label,
+      .helper,
+      .button,
+      input,
+      select {
+        font-size: 13px;
+        font-family: Inter, sans-serif;
+        line-height: 20px;
+        display: flex;
+        height: auto;
+      }
+      .section,
+      .field,
+      .input {
+        align-items: flex-start;
+      }
+      label.label {
+        display: block;
+        margin-bottom: 8px;
+        padding-left: 0;
+      }
+      .checkbox,
+      .radio {
+        align-items: center;
+      }
+
+      .radio__label {
+        margin-left: 4px;
+      }
+
+      /* Force consistent left alignment for all form fields */
+      .section,
+      .field,
+      .input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .checkbox,
+      .radio {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .label,
+      .radio__label,
+      .helper {
+        margin-left: 0 !important;
+      }
+
+      .field select.select-menu,
+      .field input.input__field {
+        align-self: stretch;
+      }
+
+      /* Right-aligned actions */
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 0px;
+      }
+
+      /* Compact number input */
+      .input--short {
+        width: 80px;
+        display: block;
+      }
+
+      /* Figma-like text input */
+      input[type="text"].input__field {
+        border: 1px solid var(--c-medium-grey);
+        border-radius: 6px;
+        background-color: var(--c-light-grey);
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        padding: 4px 8px;
+        color: var(--c-black);
+        width: 100%;
+      }
+      input[type="text"].input__field:hover {
+        background-color: #ffffff;
+        border-color: #b3b3b3;
+      }
+      input[type="text"].input__field:focus {
+        outline: none;
+        border-color: var(--c-primary);
+        box-shadow: 0 0 0 1px var(--c-primary) inset;
+      }
+
+      /* Figma-like number input */
+      input[type="number"].input__field {
+        appearance: textfield;
+        -moz-appearance: textfield;
+        border: 1px solid var(--c-medium-grey);
+        border-radius: 6px;
+        background-color: var(--c-light-grey);
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        padding: 4px 8px;
+        color: var(--c-black);
+        width: 100%;
+      }
+      input[type="number"].input__field:hover {
+        background-color: #ffffff;
+        border-color: #b3b3b3;
+      }
+      input[type="number"].input__field:focus {
+        outline: none;
+        border-color: var(--c-primary);
+        box-shadow: 0 0 0 1px var(--c-primary) inset;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        opacity: 1;
+        appearance: none;
+        -webkit-appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path fill="%23999" d="M5 0l3 3H2zM2 7l3 3 3-3z"/></svg>')
+          no-repeat center;
+        background-position: right 4px center;
+      }
+
+      /* Reveal avatar style radios when checkbox checked (no JS needed) */
+      #avatarStyleRow {
+        display: none;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      #useAvatar:checked ~ #avatarStyleRow {
+        display: flex;
+      }
+
+      /* Fallback: show native select if DS enhancement fails to load */
+      select.select-menu {
+        display: block;
+        width: 100%;
+      }
+      /* Figma-like dropdown appearance */
+      select.select-menu {
+        appearance: none;
+        -webkit-appearance: none;
+        border: 1px solid var(--c-medium-grey);
+        border-radius: 6px;
+        background-color: var(--c-light-grey);
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        padding: 4px 28px 4px 8px;
+        color: var(--c-black);
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%23999" d="M0 0l5 6 5-6z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 10px 6px;
+      }
+      select.select-menu:hover {
+        background-color: #ffffff;
+        border-color: #b3b3b3;
+      }
+      select.select-menu:focus {
+        outline: none;
+        border-color: var(--c-primary);
+        box-shadow: 0 0 0 1px var(--c-primary) inset;
+      }
+
+      /* Custom Figma-like checkbox */
+      .checkbox-custom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--c-black);
+        cursor: pointer;
+        user-select: none;
+      }
+      .checkbox-custom input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        border: 1px solid var(--c-medium-grey);
+        border-radius: 3px;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #fff;
+        margin: 0;
+        cursor: pointer;
+      }
+      .checkbox-custom input[type="checkbox"]:hover {
+        border-color: #888;
+      }
+      .checkbox-custom input[type="checkbox"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px var(--c-primary) inset;
+        border-color: var(--c-primary);
+      }
+      .checkbox-custom input[type="checkbox"]:checked {
+        background-color: var(--c-primary);
+        border-color: var(--c-primary);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 12px 12px;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path d="M3 7l3 3 6-6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+      }
+
+      /* Custom Figma-like radio */
+      .radio-custom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .radio-custom input[type="radio"] {
+        width: 14px;
+        height: 14px;
+        border: 1px solid var(--c-medium-grey);
+        border-radius: 50%;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #fff;
+        margin: 0;
+        position: relative;
+      }
+      .radio-custom input[type="radio"]:hover {
+        border-color: #888;
+      }
+      .radio-custom input[type="radio"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px var(--c-primary) inset;
+        border-color: var(--c-primary);
+      }
+      .radio-custom input[type="radio"]:checked {
+        border-color: var(--c-primary);
+      }
+      .radio-custom input[type="radio"]:checked::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        background: var(--c-primary);
+      }
+      /* Ensure custom radios use identical typography everywhere */
+      .radio-custom,
+      .radio-custom span {
+        font-family: var(--t-font);
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--c-black);
+      }
+      /* Normalize spacing between stacked radios */
+      #competition-group .radio-custom + .radio-custom,
+      [id^="role"] .radio-custom + .radio-custom,
+      .field .radio-custom + .radio-custom {
+        margin-top: 4px;
+      }
+      /* Guard against DS styles leaking into our custom radios */
+      .radio-custom input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #fff;
+      }
+      .radio-custom input[type="radio"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* --- Unified color palette --- */
+      :root {
+        --c-primary: #007aff; /* Figma blue */
+        --c-black: #000000;
+        --c-dark-grey: #6e6e6e;
+        --c-medium-grey: #e0e0e0;
+        --c-light-grey: #f9f9f9;
+      }
+
+      /* --- Unified type scale --- */
+      :root {
+        --t-font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+          Roboto, Helvetica, Arial, sans-serif;
+      }
+      .t-header {
+        font-family: var(--t-font);
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--c-black);
+      }
+      .t-subheader {
+        font-family: var(--t-font);
+        font-weight: 600;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--c-dark-grey);
+      }
+      .t-label {
+        font-family: var(--t-font);
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--c-dark-grey);
+      }
+      .t-body {
+        font-family: var(--t-font);
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 20px;
+        color: var(--c-black);
+      }
+      .t-primary {
+        color: var(--c-primary);
+        font-weight: 400;
+      }
+      /* --- Custom Figma-like buttons --- */
+      .btn {
+        font-family: var(--t-font);
+        font-size: 13px;
+        line-height: 20px;
+        font-weight: 500;
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+      }
+      .btn-primary {
+        background-color: var(--c-primary);
+        color: #fff;
+        border: 1px solid var(--c-primary);
+      }
+      .btn-primary:hover {
+        background-color: #006ae6;
+      }
+      .btn-primary:active {
+        background-color: #005ac2;
+      }
+      .btn-secondary {
+        background-color: #fff;
+        color: var(--c-primary);
+        border: 1px solid var(--c-primary);
+      }
+      .btn-secondary:hover {
+        background-color: var(--c-light-grey);
+      }
+      .btn-secondary:active {
+        background-color: var(--c-medium-grey);
+      }
+      /* --- Loader / Spinner --- */
+      .spinner-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.75);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+      }
+      .spinner-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid var(--c-medium-grey);
+        border-top-color: var(--c-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      .spinner-text {
+        font-family: var(--t-font);
+        font-size: 13px;
+        color: var(--c-dark-grey);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="container container--thin">
+    <!-- Row Dan -->
+    <div class="rowDan">
+      <div class="section">
+        <h1 class="t-header">Sportswik Teams</h1>
+      </div>
+    </div>
+
+    <!-- Row Dan -->
+
+    <!-- Row Dan -->
+    <div class="rowDan">
+      <!-- Hidden base (unchanged) -->
+      <input
+        id="imgBase"
+        type="hidden"
+        value="https://cdn.jsdelivr.net/gh/DanBilly13/playerAvatars@main"
+      />
+      <input
+        id="badgeBase"
+        type="hidden"
+        value="https://cdn.jsdelivr.net/gh/DanBilly13/sportswikTeams@main"
+      />
+
+      <div class="section">
+        <div class="input">
+          <label class="label t-label" for="namesSet">Names</label>
+          <select id="namesSet" class="select-menu">
+            <option value="en-boys" selected>English — Boys</option>
+            <option value="en-girls">English — Girls</option>
+            <option value="sv-boys">Swedish — Boys</option>
+            <option value="sv-girls">Swedish — Girls</option>
+            <option value="ch-boys">Swiss — Boys</option>
+            <option value="ch-girls">Swiss — Girls</option>
+            <option value="en-unisex">English — Unisex</option>
+            <option value="sv-unisex">Swedish — Unisex</option>
+            <option value="ch-unisex">Swiss — Unisex</option>
+          </select>
+          <div class="type type--small helper">
+            Choose locale + gender for the built-in name list.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="input">
+          <label class="label t-label" for="teamFolder">Avatar set</label>
+          <!-- Figma Plugin DS native select -->
+          <select id="teamFolder" class="select-menu">
+            <option value="blueTeamBoys" selected>Blue Team — Boys</option>
+            <option value="blueTeamGirls">Blue Team — Girls</option>
+            <option value="redTeamBoys">Red Team — Boys</option>
+            <option value="redTeamGirls">Red Team — Girls</option>
+            <option value="guardians">Guardians</option>
+            <option value="teamStaff">Team staff</option>
+            <option value="users">Users</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Row Dan -->
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Competition</div>
+        <div id="competition-group" class="field">
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="competition"
+              value="Elite League"
+              checked
+            />
+            <span>Elite League</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="competition" value="Nordic Cup" />
+            <span>Nordic Cup</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="competition" value="Baltic Challenge" />
+            <span>Baltic Challenge</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="competition" value="National Qualifier" />
+            <span>National Qualifier</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="competition" value="Youth Invitational" />
+            <span>Youth Invitational</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="competition" value="__random" />
+            <span>Random competition</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Region</div>
+        <div id="region-group" class="field">
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="Northland" checked />
+            <span>Region A — Northland</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="Riverview" />
+            <span>Region B — Riverview</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="Silver Coast" />
+            <span>Region C — Silver Coast</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="Pinecrest" />
+            <span>Region D — Pinecrest</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="Lakewood" />
+            <span>Region E — Lakewood</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="region" value="__random" />
+            <span>Random Region</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Federation</div>
+        <div id="federation-group" class="field">
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="federation"
+              value="Northern Football Union"
+              checked
+            />
+            <span>Federation A — Northern Football Union</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="federation"
+              value="Coastal Football Council"
+            />
+            <span>Federation B — Coastal Football Council</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="federation"
+              value="Central League Federation"
+            />
+            <span>Federation C — Central League Federation</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="federation"
+              value="Highlands Association"
+            />
+            <span>Federation D — Highlands Association</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="federation"
+              value="Eastshore Federation"
+            />
+            <span>Federation E — Eastshore Federation</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="federation" value="__random" />
+            <span>Random Federation</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Venue</div>
+        <div id="venue-group" class="field">
+          <label class="radio-custom t-body">
+            <input
+              type="radio"
+              name="venue"
+              value="Vildmannavallen IP"
+              checked
+            />
+            <span>Venue A — Vildmannavallen IP</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="venue" value="Skellefteå Arena" />
+            <span>Venue B — Skellefteå Arena</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="venue" value="Umeå Stadium" />
+            <span>Venue C — Umeå Stadium</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="venue" value="Kiruna Park" />
+            <span>Venue D — Kiruna Park</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="venue" value="Växjö Sports Center" />
+            <span>Venue E — Växjö Sports Center</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="venue" value="__random" />
+            <span>Random Venue</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Club badges</div>
+        <div class="field">
+          <label class="label t-label" for="badgeLibrary">Badge library</label>
+          <select id="badgeLibrary" class="select-menu">
+            <option value="gotSports" selected>GotSports (home/away)</option>
+          </select>
+          <div class="type type--small helper">
+            Choose which badge set to use when populating home & away.
+          </div>
+          <div class="type type--small helper">
+            Add shapes named <span class="t-primary">home-badge</span> and
+            <span class="t-primary">away-badge</span> to place the badge images,
+            and optional text layers named
+            <span class="t-primary">home-club-name</span> and
+            <span class="t-primary">away-club-name</span> to label them.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Score</div>
+        <label class="checkbox-custom t-body">
+          <input id="scoreRandom" type="checkbox" checked />
+          <span>Random scores (0–6)</span>
+        </label>
+        <div class="row">
+          <div class="field">
+            <label class="label t-label" for="homeScore">Home score</label>
+            <input
+              id="homeScore"
+              type="number"
+              min="0"
+              max="99"
+              value="0"
+              class="input__field input--short"
+            />
+          </div>
+          <div class="field">
+            <label class="label t-label" for="awayScore">Away score</label>
+            <input
+              id="awayScore"
+              type="number"
+              min="0"
+              max="99"
+              value="0"
+              class="input__field input--short"
+            />
+          </div>
+        </div>
+        <div class="type type--small helper">
+          If “Random” is checked, the plugin will pick a number from 0–6 for
+          each card. Uncheck to use the values above for all selected cards.
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Team name</div>
+        <div id="teamname-group" class="field">
+          <!-- Boys group -->
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="boys-u12" checked />
+            <span>BOYS U12</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="boys-u16" />
+            <span>BOYS U16</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="div3-boys" />
+            <span>Division 3 Boys</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="div2-boys" />
+            <span>Division 2 Boys</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="__random-boys" />
+            <span>Random Boys</span>
+          </label>
+
+          <!-- Girls group -->
+          <label class="radio-custom t-body" style="margin-top: 8px">
+            <input type="radio" name="teamNameOpt" value="girls-u12" />
+            <span>GIRLS U12</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="girls-u16" />
+            <span>GIRLS U16</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="div3-girls" />
+            <span>Division 3 Girls</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="div2-girls" />
+            <span>Division 2 Girls</span>
+          </label>
+          <label class="radio-custom t-body">
+            <input type="radio" name="teamNameOpt" value="__random-girls" />
+            <span>Random Girls</span>
+          </label>
+
+          <!-- Mixed group -->
+          <label class="radio-custom t-body" style="margin-top: 8px">
+            <input type="radio" name="teamNameOpt" value="__random-mixed" />
+            <span>Random Mixed</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div class="field">
+        <label class="label t-label" for="start">Starting number</label>
+        <input
+          id="start"
+          type="number"
+          min="1"
+          value="1"
+          class="input__field input--short"
+        />
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <label class="checkbox-custom t-body">
+        <input id="shuffle" type="checkbox" />
+        <span>Shuffle names</span>
+      </label>
+    </div>
+
+    <div class="rowDan">
+      <label class="checkbox-custom t-body">
+        <input id="useAvatar" type="checkbox" />
+        <span>Include avatars</span>
+      </label>
+      <div class="row" id="avatarStyleRow">
+        <label class="radio-custom t-body">
+          <input type="radio" name="avatarStyle" value="vector" />
+          <span>Vector initials</span>
+        </label>
+        <label class="radio-custom t-body">
+          <input type="radio" name="avatarStyle" value="image" checked />
+          <span>Image PNGs</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Personal info</div>
+        <label class="checkbox-custom t-body">
+          <input id="useMobile" type="checkbox" />
+          <span>Include mobile number</span>
+        </label>
+        <label class="checkbox-custom t-body">
+          <input id="useEmail" type="checkbox" />
+          <span>Include email</span>
+        </label>
+        <label class="checkbox-custom t-body">
+          <input id="usePersonId" type="checkbox" />
+          <span>Include personal ID</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Date & time</div>
+        <label class="checkbox-custom t-body">
+          <input id="useDate" type="checkbox" />
+          <span>Include date</span>
+        </label>
+        <label class="checkbox-custom t-body">
+          <input id="useTime" type="checkbox" />
+          <span>Include time</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div
+        class="section"
+        style="display: flex; flex-direction: column; gap: 8px; width: 100%"
+      >
+        <div class="t-subheader">Role</div>
+        <label class="radio-custom t-body">
+          <input type="radio" name="roleMode" value="player" checked />
+          <span>Player</span>
+        </label>
+        <label class="radio-custom t-body">
+          <input type="radio" name="roleMode" value="guardian" />
+          <span>Guardian</span>
+        </label>
+        <label class="radio-custom t-body">
+          <input type="radio" name="roleMode" value="staff" />
+          <span>Team staff</span>
+        </label>
+        <label class="radio-custom t-body">
+          <input type="radio" name="roleMode" value="mixed" />
+          <span>Mixed</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div class="actions">
+        <button id="scan" class="btn btn-secondary">Scan</button>
+        <button id="populate" class="btn btn-primary">Populate</button>
+      </div>
+    </div>
+
+    <div class="rowDan">
+      <div class="t-subheader">How to use</div>
+      <div class="t-body" style="margin-top: 6px">
+        To populate, select one or more frames or components containing text
+        layers named:
+        <ul style="margin: 6px 0 6px 16px; padding-left: 0">
+          <li>
+            <span class="t-primary">player-name</span> — player or team member
+            name
+          </li>
+          <li><span class="t-primary">shirt-number</span> — shirt number</li>
+          <li>
+            <span class="t-primary">competition</span>,
+            <span class="t-primary">region</span>,
+            <span class="t-primary">federation</span>,
+            <span class="t-primary">venue</span> — competition details
+          </li>
+          <li>
+            <span class="t-primary">home-team-name</span> and
+            <span class="t-primary">away-team-name</span> — team labels for each
+            side (fallback: a single
+            <span class="t-primary">team-name</span> layer is also supported)
+          </li>
+          <li>
+            <span class="t-primary">home-club-name</span> and
+            <span class="t-primary">away-club-name</span> — optional club names
+            mapped to badges
+          </li>
+          <li>
+            Shapes named <span class="t-primary">home-badge</span> and
+            <span class="t-primary">away-badge</span> — badges are placed as
+            image fills
+          </li>
+          <li>
+            <span class="t-primary">home-score</span> and
+            <span class="t-primary">away-score</span> — numeric score text
+          </li>
+          <li><span class="t-primary">mobile-number</span> — optional phone</li>
+          <li><span class="t-primary">email</span> — optional email address</li>
+          <li>
+            <span class="t-primary">personal-id</span> — optional personal ID
+            (YYYYMMDD-XXXX)
+          </li>
+          <li>
+            <span class="t-primary">date</span> — optional date (YYYY-MM-DD)
+          </li>
+          <li><span class="t-primary">time</span> — optional time (HH:MM)</li>
+          <li>
+            <span class="t-primary">role</span> — Player, Guardian, or Staff
+            role
+          </li>
+        </ul>
+        You can also include a shape named
+        <span class="t-primary">avatar</span>,
+        <span class="t-primary">player-avatar</span>, or
+        <span class="t-primary">photo</span> — the plugin updates its first fill
+        automatically with an image or color avatar. <br /><br />
+        The plugin supports randomization for competition, region, federation,
+        and venue. Simply select “Random …” for any of those sections before
+        populating.
+      </div>
+    </div>
+
+    <pre id="log" class="type type--small"></pre>
+
+    <div id="spinner" class="spinner-overlay" aria-hidden="true" role="status">
+      <div class="spinner-box">
+        <div class="spinner" aria-label="Loading"></div>
+        <div class="spinner-text">Populating… this can take a moment</div>
+        <button
+          id="spinner-hide"
+          class="btn btn-secondary"
+          style="padding: 4px 8px; font-weight: 400"
+        >
+          Hide
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const log = (obj) => {
+        const pre = document.getElementById("log");
+        pre.textContent =
+          typeof obj === "string" ? obj : JSON.stringify(obj, null, 2);
+      };
+
+      // Spinner helpers
+      const spinnerEl = document.getElementById("spinner");
+      const hideSpinnerBtn = document.getElementById("spinner-hide");
+      const scanBtn = document.getElementById("scan");
+      const populateBtn = document.getElementById("populate");
+      let spinnerTimeout = null;
+      function showSpinner() {
+        spinnerEl.style.display = "flex";
+        scanBtn.disabled = true;
+        populateBtn.disabled = true;
+        // Safety auto-hide after 60s (does not cancel the job, only the overlay)
+        clearTimeout(spinnerTimeout);
+        spinnerTimeout = setTimeout(hideSpinner, 60000);
+      }
+      function hideSpinner() {
+        spinnerEl.style.display = "none";
+        scanBtn.disabled = false;
+        populateBtn.disabled = false;
+        clearTimeout(spinnerTimeout);
+      }
+      hideSpinnerBtn.addEventListener("click", hideSpinner);
+
+      // Initialize Figma DS select menu and wire it to hidden input
+      try {
+        if (window.selectMenu && typeof window.selectMenu.init === "function") {
+          window.selectMenu.init();
+        }
+      } catch (e) {
+        /* no-op: DS script optional */
+      }
+
+      // Score inputs enable/disable
+      const scoreRandEl = document.getElementById("scoreRandom");
+      const homeScoreEl = document.getElementById("homeScore");
+      const awayScoreEl = document.getElementById("awayScore");
+      function syncScoreInputs() {
+        const isRand = !!(scoreRandEl && scoreRandEl.checked);
+        if (homeScoreEl) homeScoreEl.disabled = isRand;
+        if (awayScoreEl) awayScoreEl.disabled = isRand;
+      }
+      if (scoreRandEl) scoreRandEl.addEventListener("change", syncScoreInputs);
+      syncScoreInputs();
+
+      onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (!msg) return;
+        if (msg.type === "scan-result") log(msg.payload);
+        if (msg.type === "error") {
+          log(msg.payload);
+          hideSpinner();
+        }
+        if (msg.type === "populate-done") {
+          hideSpinner();
+        }
+      };
+
+      document.getElementById("scan").onclick = () => {
+        const namesSel = document.getElementById("namesSet");
+        const val = namesSel ? namesSel.value : "en-boys";
+        const [lc, gender] = val.split("-");
+        parent.postMessage(
+          { pluginMessage: { type: "scan", nameSet: gender, locale: lc } },
+          "*"
+        );
+      };
+
+      document.getElementById("populate").onclick = async () => {
+        const namesSel = document.getElementById("namesSet");
+        const val = namesSel ? namesSel.value : "en-boys";
+        const [lc, gender] = val.split("-");
+        const start = parseInt(
+          document.getElementById("start").value || "1",
+          10
+        );
+        const shuffle = document.getElementById("shuffle").checked;
+        const useAvatar = document.getElementById("useAvatar").checked;
+        const useMobile = document.getElementById("useMobile").checked;
+        const useEmail = document.getElementById("useEmail").checked;
+        const usePersonId = document.getElementById("usePersonId").checked;
+        const useDate = document.getElementById("useDate").checked;
+        const useTime = document.getElementById("useTime").checked;
+
+        const styleRadios = Array.from(
+          document.querySelectorAll('input[name="avatarStyle"]')
+        );
+        const avatarMode =
+          (styleRadios.find((r) => r.checked) || {}).value || "image";
+
+        const roleRadios = Array.from(
+          document.querySelectorAll('input[name="roleMode"]')
+        );
+        const roleMode = (
+          roleRadios.find((r) => r.checked) || { value: "player" }
+        ).value;
+
+        const imgBaseEl = document.getElementById("imgBase");
+        const imgBase =
+          imgBaseEl && "value" in imgBaseEl ? imgBaseEl.value : "";
+        const teamFolderEl = document.getElementById("teamFolder");
+        const teamFolder = teamFolderEl ? teamFolderEl.value : "";
+        const badgeBaseEl = document.getElementById("badgeBase");
+        const badgeBase =
+          badgeBaseEl && "value" in badgeBaseEl ? badgeBaseEl.value : "";
+
+        // --- Read Competition / Region / Federation / Venue ---
+        function pickChecked(name) {
+          const el = document.querySelector(`input[name="${name}"]:checked`);
+          return el ? el.value : "";
+        }
+        function randomFrom(list) {
+          return list[Math.floor(Math.random() * list.length)];
+        }
+        // Options must mirror the UI labels
+        const COMP_OPTS = [
+          "Elite League",
+          "Nordic Cup",
+          "Baltic Challenge",
+          "National Qualifier",
+          "Youth Invitational",
+        ];
+        const REG_OPTS = [
+          "Northland",
+          "Riverview",
+          "Silver Coast",
+          "Pinecrest",
+          "Lakewood",
+        ];
+        const FED_OPTS = [
+          "Northern Football Union",
+          "Coastal Football Council",
+          "Central League Federation",
+          "Highlands Association",
+          "Eastshore Federation",
+        ];
+        const VENUE_OPTS = [
+          "Vildmannavallen IP",
+          "Skellefteå Arena",
+          "Umeå Stadium",
+          "Kiruna Park",
+          "Växjö Sports Center",
+        ];
+
+        let competition = pickChecked("competition");
+        if (competition === "__random") competition = randomFrom(COMP_OPTS);
+        let region = pickChecked("region");
+        if (region === "__random") region = randomFrom(REG_OPTS);
+        let federation = pickChecked("federation");
+        if (federation === "__random") federation = randomFrom(FED_OPTS);
+        let venue = pickChecked("venue");
+        if (venue === "__random") venue = randomFrom(VENUE_OPTS);
+
+        // Team name option
+        const teamNameEl = document.querySelector(
+          'input[name="teamNameOpt"]:checked'
+        );
+        const teamNameOpt = teamNameEl ? teamNameEl.value : "";
+
+        // Badge library (for future), already have teamFolder for avatars
+        const badgeLibrarySel = document.getElementById("badgeLibrary");
+        const badgeLibrary = badgeLibrarySel ? badgeLibrarySel.value : "";
+
+        // Score controls
+        const scoreRandom = document.getElementById("scoreRandom").checked;
+        const homeScore = parseInt(
+          (document.getElementById("homeScore") || {}).value || "0",
+          10
+        );
+        const awayScore = parseInt(
+          (document.getElementById("awayScore") || {}).value || "0",
+          10
+        );
+
+        showSpinner();
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "populate",
+              nameSet: gender,
+              locale: lc,
+              startNumber: start,
+              shuffle,
+              useAvatar,
+              useMobile,
+              useEmail,
+              usePersonId,
+              useDate,
+              useTime,
+              roleMode,
+              avatarMode,
+              imgBase,
+              teamFolder,
+              competition,
+              region,
+              federation,
+              venue,
+              teamNameOpt,
+              badgeLibrary,
+              badgeBase,
+              scoreRandom,
+              homeScore,
+              awayScore,
+            },
+          },
+          "*"
+        );
+      };
+    </script>
+  </body>
+</html>
